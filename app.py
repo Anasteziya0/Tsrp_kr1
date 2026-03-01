@@ -1,12 +1,10 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from models import User
 
 app = FastAPI()
 
-class Numbers(BaseModel):
-    num1: float
-    num2: float
+user = User(name="Анастасия Данилова", id=1)
 
-@app.post("/calculate")
-def calculate(numbers: Numbers):
-    return {"result": numbers.num1 + numbers.num2}
+@app.get("/users")
+def get_user():
+    return user
