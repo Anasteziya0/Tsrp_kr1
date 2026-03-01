@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from typing import List
+from pydantic import BaseModel, Field, field_validator
+from typing import List, Optional
 
 class User(BaseModel):
     name: str
@@ -10,5 +10,14 @@ class UserAge(BaseModel):
     age: int
 
 class Feedback(BaseModel):
-    name: str
-    message: str
+    name: str = Field(..., min_length=2, max_length=50)
+    message: str = Field(..., min_length=10, max_length=500)
+    
+    @field_validator('message')
+    def check_bad_words(cls, v):
+        bad_words = ['крингж', 'рофл', 'вайб']
+        v_lower = v.lower()
+        for word in bad_words:
+            if word in v_lower:
+                raise ValueError('Использование недопустимых слов')
+        return v

@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from models import User, UserAge, Feedback
@@ -8,7 +8,7 @@ app = FastAPI()
 
 feedbacks = []
 
-user = User(name="Анастасия Данилова", id=1)
+user = User(name="Данилова Анастасия", id=1)
 
 class Numbers(BaseModel):
     num1: float
@@ -38,8 +38,11 @@ async def check_user(user: UserAge):
 
 @app.post("/feedback")
 async def create_feedback(feedback: Feedback):
-    feedbacks.append(feedback)
-    return {"message": f"Feedback received. Thank you, {feedback.name}."}
+    try:
+        feedbacks.append(feedback)
+        return {"message": f"Спасибо, {feedback.name}! Ваш отзыв сохранён."}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/feedbacks")
 async def get_feedbacks():
