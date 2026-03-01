@@ -1,8 +1,12 @@
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from pydantic import BaseModel
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return FileResponse("index.html")
+class Numbers(BaseModel):
+    num1: float
+    num2: float
+
+@app.post("/calculate")
+def calculate(numbers: Numbers):
+    return {"result": numbers.num1 + numbers.num2}
