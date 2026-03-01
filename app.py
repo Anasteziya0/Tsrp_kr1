@@ -1,7 +1,8 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "Добро пожаловать в моё приложение FastAPI!"}
+    return FileResponse("index.html")
